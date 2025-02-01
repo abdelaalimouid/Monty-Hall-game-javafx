@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import observer.ProbabilityDisplayDecorator;
+import observer.ProbabilityDisplayer;
 import strategy.StayStrategy;
 import strategy.SwitchStrategy;
 
@@ -57,7 +57,7 @@ public class Main extends Application {
 
     private void showGameScreen(Stage primaryStage) {
         game = new Game();
-        game.addObserver(new ProbabilityDisplayDecorator(this::updateMessage));
+        game.addObserver(new ProbabilityDisplayer(this::updateMessage));
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
@@ -98,7 +98,7 @@ public class Main extends Application {
 
             Image doorImage = new Image(getClass().getResourceAsStream("/images/door.png"));
             ImageView doorView = new ImageView(doorImage);
-            doorView.setFitWidth(100);
+            doorView.setFitWidth(150);
             doorView.setFitHeight(150);
 
             final int doorIndex = i;
@@ -169,6 +169,7 @@ public class Main extends Application {
 
     private void showFinalResult() {
         int winningDoor = game.getWinningDoor();
+        int finalUserChoice = game.getFinalChoice();
 
         for (int i = 0; i < 3; i++) {
             VBox doorContainer = (VBox) doorsBox.getChildren().get(i);
@@ -179,10 +180,14 @@ public class Main extends Application {
             ));
             doorView.setImage(resultImage);
 
-            if (i == winningDoor) {
-                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
+            if (i == finalUserChoice && i == winningDoor) {
+                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;"); // Correct choice in green
+            } else if (i == finalUserChoice && i != winningDoor) {
+                doorContainer.setStyle("-fx-border-color: red; -fx-border-width: 3px;"); // Wrong choice in red
+            } else if (i == winningDoor) {
+                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;"); // Winning door in green
             } else {
-                doorContainer.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+                doorContainer.setStyle("-fx-border-color: transparent; -fx-border-width: 0;"); // Others transparent
             }
         }
     }
@@ -204,7 +209,7 @@ public class Main extends Application {
         userChoice = -1;
         hostRevealedDoor = -1;
         game = new Game();
-        game.addObserver(new ProbabilityDisplayDecorator(this::updateMessage));
+        game.addObserver(new ProbabilityDisplayer(this::updateMessage));
         updateMessage("Choose a door to start the game.");
         doorsBox.getChildren().clear();
         createDoorButtons();

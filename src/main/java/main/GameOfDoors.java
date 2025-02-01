@@ -2,7 +2,7 @@ package main;
 
 import game.Game;
 import observer.GameObserver;
-import observer.ProbabilityDisplayDecorator;
+import observer.ProbabilityDisplayer;
 import strategy.SwitchStrategy;
 import strategy.StayStrategy;
 
@@ -15,7 +15,7 @@ public class GameOfDoors {
 
         while (playAgain) {
             Game game = new Game();
-            GameObserver observer = new ProbabilityDisplayDecorator(message -> System.out.println(message));
+            GameObserver observer = new ProbabilityDisplayer(message -> System.out.println(message));
             game.addObserver(observer);
 
             System.out.println("\nWelcome to the Monty Hall Game!");

@@ -13,6 +13,7 @@ public class Game {
     private List<GameObserver> observers = new ArrayList<>();
     private List<Door> doors;
     private int userChoice;
+    private int finalChoice;
     private Strategy strategy;
 
     public Game() {
@@ -50,6 +51,7 @@ public class Game {
 
     public void finalizeChoice() {
         Door finalDoor = strategy.chooseDoor(doors, userChoice);
+        finalChoice = doors.indexOf(finalDoor);
         if (finalDoor.hasPrize()) {
             notifyObservers("You won!");
         } else {
@@ -57,6 +59,9 @@ public class Game {
         }
     }
 
+    public int getFinalChoice() {
+        return finalChoice;
+    }
     private void notifyObservers(String message) {
         for (GameObserver observer : observers) {
             observer.update(message);
