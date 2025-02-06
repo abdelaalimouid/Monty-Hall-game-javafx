@@ -20,5 +20,9 @@ This application implements the classic Monty Hall problem using JavaFX for the 
 2. Build and run the application using your preferred IDE or command-line tools.
 3. Follow the on-screen instructions to play the game.
 
-## Demo Video
-Please open the `demovideo/Demo.mov` file to watch the demonstration.
+## Demo Video 🎥
+
+[![Watch the video](https://img.youtube.com/vi/of13WS40wIc/maxresdefault.jpg)](https://www.youtube.com/watch?v=of13WS40wIc)
+
+👉 Watch the demo here: [https://youtu.be/of13WS40wIc](https://youtu.be/of13WS40wIc)
+
