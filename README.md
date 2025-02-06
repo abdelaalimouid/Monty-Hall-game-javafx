@@ -21,5 +21,4 @@ This application implements the classic Monty Hall problem using JavaFX for the 
 3. Follow the on-screen instructions to play the game.
 
 ## Demo Video
-A demo video is included to showcase the game’s features and user experience.
-
+Please open the `demovideo/Demo.mov` file to watch the demonstration.
