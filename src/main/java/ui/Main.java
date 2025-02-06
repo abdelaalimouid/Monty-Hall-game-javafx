@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import observer.ConsoleNotifier;
 import strategy.StayStrategy;
 import strategy.SwitchStrategy;
 
@@ -37,10 +36,12 @@ public class Main extends Application {
         introScreen.setAlignment(Pos.CENTER);
         introScreen.setStyle("-fx-background-color: #1e1e1e; -fx-padding: 20px;");
 
-        Label introLabel = new Label("Welcome to the Monty Hall Game!\n\n" +
-                "Choose one of three doors. The host will reveal an empty door, " +
-                "and you will then have the option to stay or switch.\n" +
-                "Hint: Statistically, switching increases your chance of winning.");
+        Label introLabel = new Label("""
+                Welcome to the Monty Hall Game!
+                
+                Choose one of three doors. The host will reveal an empty door,
+                and you will then have the option to stay or switch.
+                Hint: Statistically, switching increases your chance of winning.""");
         introLabel.setTextFill(Color.WHITE);
         introLabel.setStyle("-fx-font-size: 16px;");
 
@@ -112,9 +113,16 @@ public class Main extends Application {
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
             pause.setOnFinished(e -> {
                 hostRevealedDoor = game.chooseDoor(choice);
+
+                VBox hostDoorContainer = (VBox) doorsBox.getChildren().get(hostRevealedDoor);
+                ImageView hostDoorView = (ImageView) hostDoorContainer.getChildren().get(0);
+                Image goatImage = new Image(Objects.requireNonNull(
+                        getClass().getResourceAsStream("/images/goat.png"),
+                        "Goat image not found"));
+                hostDoorView.setImage(goatImage);
+
                 highlightDoor(hostRevealedDoor, "gray");
-                updateMessage("Host opened door " + (hostRevealedDoor + 1) +
-                        ". Do you want to switch?");
+                updateMessage("Host opened door " + (hostRevealedDoor + 1) + ". Do you want to switch?");
                 showSwitchOptions();
             });
             pause.play();
@@ -145,36 +153,51 @@ public class Main extends Application {
     private void handleFinalChoice(strategy.Strategy strategy) {
         game.setStrategy(strategy);
         game.finalizeChoice();
-        showFinalResult();
+        revealFinalChoice();
         hintButton.setDisable(true);
         switchButton.setDisable(true);
         stayButton.setDisable(true);
     }
 
-    private void showFinalResult() {
-        int winningDoor = game.getWinningDoor();
+    private void revealFinalChoice() {
         int finalUserChoice = game.getFinalChoice();
+        int winningDoor = game.getWinningDoor();
 
-        for (int i = 0; i < 3; i++) {
-            VBox doorContainer = (VBox) doorsBox.getChildren().get(i);
-            ImageView doorView = (ImageView) doorContainer.getChildren().get(0);
-            Image resultImage = new Image(
-                    Objects.requireNonNull(getClass().getResourceAsStream(
-                            i == winningDoor ? "/images/car.png" : "/images/goat.png"
-                    ))
-            );
-            doorView.setImage(resultImage);
-
-            if (i == finalUserChoice && i == winningDoor) {
-                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
-            } else if (i == finalUserChoice && i != winningDoor) {
-                doorContainer.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
-            } else if (i == winningDoor) {
-                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
-            } else {
-                doorContainer.setStyle("");
-            }
+        VBox chosenContainer = (VBox) doorsBox.getChildren().get(finalUserChoice);
+        ImageView chosenView = (ImageView) chosenContainer.getChildren().get(0);
+        Image chosenImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(
+                finalUserChoice == winningDoor ? "/images/car.png" : "/images/goat.png"
+        )));
+        chosenView.setImage(chosenImage);
+        if (finalUserChoice == winningDoor) {
+            chosenContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
+        } else {
+            chosenContainer.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
         }
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> {
+            for (int i = 0; i < 3; i++) {
+                if (i == finalUserChoice) {
+                    continue;
+                }
+                VBox doorContainer = (VBox) doorsBox.getChildren().get(i);
+                ImageView doorView = (ImageView) doorContainer.getChildren().get(0);
+                Image resultImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(
+                        i == winningDoor ? "/images/car.png" : "/images/goat.png"
+                )));
+                doorView.setImage(resultImage);
+                if (i == winningDoor) {
+                    doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
+                } else {
+                    doorContainer.setStyle("");
+                }
+            }
+            updateMessage(finalUserChoice == winningDoor ?
+                    "Congratulations, you won!" :
+                    "Sorry, you lost. The prize was behind door " + (winningDoor + 1) + ".");
+        });
+        pause.play();
     }
 
     private void showHint() {

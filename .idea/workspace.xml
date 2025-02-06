@@ -5,24 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca732e77-005f-465b-be69-a22b5e5c7159" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/factory/DoorFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/goat.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/Host.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/Host.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/GameOfDoors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/MainCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Door.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Door.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/DoorFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/EmptyDoor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/EmptyDoor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/PrizeDoor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/PrizeDoor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/observer/GameObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/observer/GameObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/observer/ProbabilityDisplayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/observer/ConsoleNotifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/state/FinalizingChoiceState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/state/FinalizingChoiceState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/state/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/state/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/state/WaitingForChoiceState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/state/WaitingForChoiceState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/strategy/StayStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/strategy/StayStrategy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/strategy/SwitchStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/strategy/SwitchStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/MainCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/MainCli.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ui/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/goat.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +84,7 @@
       <updated>1738407344272</updated>
       <workItem from="1738407345178" duration="10698000" />
       <workItem from="1738672893116" duration="7647000" />
-      <workItem from="1738850579147" duration="692000" />
+      <workItem from="1738850579147" duration="1759000" />
     </task>
     <servers />
   </component>
