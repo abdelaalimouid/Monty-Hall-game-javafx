@@ -11,6 +11,6 @@ public class SwitchStrategy implements Strategy {
                 return doors.get(i);
             }
         }
-        throw new IllegalStateException("No valid door to switch to");
+        throw new IllegalStateException("No valid door available to switch.");
     }
 }

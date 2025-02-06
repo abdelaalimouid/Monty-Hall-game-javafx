@@ -1,5 +1,6 @@
 package ui;
 
+import factory.MontyHallDoorFactory;
 import game.Game;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
@@ -14,9 +15,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import observer.ProbabilityDisplayer;
+import observer.ConsoleNotifier;
 import strategy.StayStrategy;
 import strategy.SwitchStrategy;
+
+import java.util.Objects;
 
 public class Main extends Application {
     private Game game;
@@ -26,7 +29,6 @@ public class Main extends Application {
     private Button hintButton;
     private Button switchButton;
     private Button stayButton;
-    private int userChoice = -1;
     private int hostRevealedDoor = -1;
 
     @Override
@@ -36,12 +38,9 @@ public class Main extends Application {
         introScreen.setStyle("-fx-background-color: #1e1e1e; -fx-padding: 20px;");
 
         Label introLabel = new Label("Welcome to the Monty Hall Game!\n\n" +
-                "In this game, you will choose one of three doors.\n" +
-                "The host will then reveal an empty door.\n" +
-                "You will have the option to stay with your original choice or switch to the remaining\n" +
-                "door.\n" +
-                "Statistically, switching gives you a better chance of winning.\n" +
-                "Can you beat the odds?");
+                "Choose one of three doors. The host will reveal an empty door, " +
+                "and you will then have the option to stay or switch.\n" +
+                "Hint: Statistically, switching increases your chance of winning.");
         introLabel.setTextFill(Color.WHITE);
         introLabel.setStyle("-fx-font-size: 16px;");
 
@@ -56,8 +55,8 @@ public class Main extends Application {
     }
 
     private void showGameScreen(Stage primaryStage) {
-        game = new Game();
-        game.addObserver(new ProbabilityDisplayer(this::updateMessage));
+        game = new Game(new MontyHallDoorFactory());
+        game.addObserver(message -> updateMessage(message));
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
@@ -86,7 +85,6 @@ public class Main extends Application {
         buttonBox.setAlignment(Pos.CENTER);
 
         root.getChildren().addAll(messageLabel, doorsBox, switchContainer, buttonBox);
-
         primaryStage.setScene(new Scene(root, 600, 400));
     }
 
@@ -96,50 +94,37 @@ public class Main extends Application {
             VBox doorContainer = new VBox();
             doorContainer.setAlignment(Pos.CENTER);
 
-            Image doorImage = new Image(getClass().getResourceAsStream("/images/door.png"));
+            Image doorImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/door.png")));
             ImageView doorView = new ImageView(doorImage);
             doorView.setFitWidth(150);
             doorView.setFitHeight(150);
 
             final int doorIndex = i;
             doorView.setOnMouseClicked(e -> handleDoorSelection(doorIndex));
-
             doorContainer.getChildren().add(doorView);
             doorsBox.getChildren().add(doorContainer);
         }
     }
 
     private void handleDoorSelection(int choice) {
-        if (userChoice == -1) {
-            userChoice = choice;
-            highlightSelectedDoor();
-
+        if (game.getUserChoice() == -1) {
+            highlightDoor(choice, "blue");
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
             pause.setOnFinished(e -> {
                 hostRevealedDoor = game.chooseDoor(choice);
-                highlightHostDoor();
-                updateMessage("Host opened door " + (hostRevealedDoor + 1) + ", which is empty. Do you want to switch?");
+                highlightDoor(hostRevealedDoor, "gray");
+                updateMessage("Host opened door " + (hostRevealedDoor + 1) +
+                        ". Do you want to switch?");
                 showSwitchOptions();
             });
             pause.play();
         }
     }
 
-
-    private void highlightSelectedDoor() {
-        VBox doorContainer = (VBox) doorsBox.getChildren().get(userChoice);
-        doorContainer.setStyle("-fx-border-color: blue; -fx-border-width: 3px;");
+    private void highlightDoor(int doorIndex, String color) {
+        VBox doorContainer = (VBox) doorsBox.getChildren().get(doorIndex);
+        doorContainer.setStyle("-fx-border-color: " + color + "; -fx-border-width: 3px;");
     }
-
-    private void highlightHostDoor() {
-        VBox doorContainer = (VBox) doorsBox.getChildren().get(hostRevealedDoor);
-        ImageView doorView = (ImageView) doorContainer.getChildren().get(0);
-
-        Image goatImage = new Image(getClass().getResourceAsStream("/images/goat.png"));
-        doorView.setImage(goatImage);
-
-    }
-
 
     private void showSwitchOptions() {
         switchContainer.getChildren().clear();
@@ -154,7 +139,6 @@ public class Main extends Application {
 
         HBox switchBox = new HBox(10, switchButton, stayButton);
         switchBox.setAlignment(Pos.CENTER);
-
         switchContainer.getChildren().add(switchBox);
     }
 
@@ -174,28 +158,28 @@ public class Main extends Application {
         for (int i = 0; i < 3; i++) {
             VBox doorContainer = (VBox) doorsBox.getChildren().get(i);
             ImageView doorView = (ImageView) doorContainer.getChildren().get(0);
-
-            Image resultImage = new Image(getClass().getResourceAsStream(
-                    i == winningDoor ? "/images/car.png" : "/images/goat.png"
-            ));
+            Image resultImage = new Image(
+                    Objects.requireNonNull(getClass().getResourceAsStream(
+                            i == winningDoor ? "/images/car.png" : "/images/goat.png"
+                    ))
+            );
             doorView.setImage(resultImage);
 
             if (i == finalUserChoice && i == winningDoor) {
-                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;"); // Correct choice in green
+                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
             } else if (i == finalUserChoice && i != winningDoor) {
-                doorContainer.setStyle("-fx-border-color: red; -fx-border-width: 3px;"); // Wrong choice in red
+                doorContainer.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
             } else if (i == winningDoor) {
-                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;"); // Winning door in green
+                doorContainer.setStyle("-fx-border-color: green; -fx-border-width: 3px;");
             } else {
-                doorContainer.setStyle("-fx-border-color: transparent; -fx-border-width: 0;"); // Others transparent
+                doorContainer.setStyle("");
             }
         }
     }
 
-
     private void showHint() {
-        if (!messageLabel.getText().contains("Unopened door has a 2/3 chance.")) {
-            updateMessage("Unopened door has a 2/3 chance.");
+        if (!messageLabel.getText().contains("2/3 chance")) {
+            updateMessage("Hint: The unopened door has a 2/3 chance of hiding the prize.");
         } else {
             updateMessage("");
         }
@@ -206,10 +190,7 @@ public class Main extends Application {
     }
 
     private void resetGame() {
-        userChoice = -1;
-        hostRevealedDoor = -1;
-        game = new Game();
-        game.addObserver(new ProbabilityDisplayer(this::updateMessage));
+        game.resetGame();
         updateMessage("Choose a door to start the game.");
         doorsBox.getChildren().clear();
         createDoorButtons();

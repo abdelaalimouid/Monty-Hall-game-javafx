@@ -6,8 +6,8 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class Host {
-    private static Host instance = new Host();
-    private Random random = new Random();
+    private static final Host instance = new Host();
+    private final Random random = new Random();
 
     private Host() {}
 

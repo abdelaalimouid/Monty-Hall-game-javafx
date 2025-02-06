@@ -10,7 +10,7 @@ public class EmptyDoor implements Door {
 
     @Override
     public void open() {
-        this.open = true;
+        open = true;
     }
 
     @Override
